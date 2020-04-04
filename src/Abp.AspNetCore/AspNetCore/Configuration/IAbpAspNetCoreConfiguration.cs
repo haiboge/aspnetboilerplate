@@ -12,6 +12,7 @@ namespace Abp.AspNetCore.Configuration
     {
         WrapResultAttribute DefaultWrapResultAttribute { get; }
 
+        [Obsolete]
         IClientCacheAttribute DefaultClientCacheAttribute { get; set; }
 
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
@@ -33,11 +34,16 @@ namespace Abp.AspNetCore.Configuration
         /// Default: true.
         /// </summary>
         bool SetNoCacheForAjaxResponses { get; set; }
-        
+
+        /// <summary>
+        /// Default: false.
+        /// </summary>
+        bool UseMvcDateTimeFormatForAppServices { get; set; }
+
         /// <summary>
         /// Used to add route config for modules.
         /// </summary>
-        List<Action<IRouteBuilder>> RouteConfiguration { get; }
+        List<Action<IEndpointRouteBuilder>> EndpointConfiguration { get; }
 
         AbpControllerAssemblySettingBuilder CreateControllersForAppServices(
             Assembly assembly,
