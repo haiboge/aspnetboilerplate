@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.DynamicEntityParameters;
 using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFrameworkCore
@@ -156,6 +157,26 @@ namespace Abp.Zero.EntityFrameworkCore
         /// </summary>
         public virtual DbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
 
+        /// <summary>
+        /// DynamicParameters
+        /// </summary>
+        public virtual DbSet<DynamicParameter> DynamicParameters { get; set; }
+
+        /// <summary>
+        /// DynamicParameter selectable values
+        /// </summary>
+        public virtual DbSet<DynamicParameterValue> DynamicParameterValues { get; set; }
+
+        /// <summary>
+        /// Entities dynamic parameters. Which parameters that entity has
+        /// </summary>
+        public virtual DbSet<EntityDynamicParameter> EntityDynamicParameters { get; set; }
+
+        /// <summary>
+        /// Entities dynamic parameter's values
+        /// </summary>
+        public virtual DbSet<EntityDynamicParameterValue> EntityDynamicParameterValues { get; set; }
+
         public IEntityHistoryHelper EntityHistoryHelper { get; set; }
 
         /// <summary>
@@ -274,7 +295,7 @@ namespace Abp.Zero.EntityFrameworkCore
 
             modelBuilder.Entity<OrganizationUnit>(b =>
             {
-                b.HasIndex(e => new { e.TenantId, e.Code });
+                b.HasIndex(e => new { e.TenantId, e.Code }).IsUnique();
             });
 
             modelBuilder.Entity<PermissionSetting>(b =>
@@ -352,6 +373,16 @@ namespace Abp.Zero.EntityFrameworkCore
             modelBuilder.Entity<UserToken>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.UserId });
+            });
+
+            modelBuilder.Entity<DynamicParameter>(b =>
+            {
+                b.HasIndex(e => new { e.ParameterName, e.TenantId }).IsUnique();
+            });
+
+            modelBuilder.Entity<EntityDynamicParameter>(b =>
+            {
+                b.HasIndex(e => new { e.EntityFullName, e.DynamicParameterId, e.TenantId }).IsUnique();
             });
         }
     }
